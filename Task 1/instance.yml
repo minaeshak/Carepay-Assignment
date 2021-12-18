@@ -1,0 +1,32 @@
+Description: >
+  EC2 instance stack.
+Parameters:
+  Key:
+    Description: Key name.
+    Type: String
+
+Resources:
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow port 22 
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      SecurityGroups:
+        - Ref: InstanceSecurityGroup
+      KeyName: !Sub ${Key}
+      #aws-frankfurt
+      ImageId: ami-0d527b8c289b4af7f
+
+         #     aws cloudformation deploy --template-file instance.yml --stack-name "EC2-Frankfurt" --parameter-overrides Key=aws-frankfurt 
